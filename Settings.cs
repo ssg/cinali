@@ -60,31 +60,29 @@ namespace cinali
 
         public void ReadFromRegistry()
         {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(appRootKey);
-            if (key == null)
+            using (var key = Registry.CurrentUser.OpenSubKey(appRootKey))
             {
-                return;
-            }
+                if (key == null)
+                {
+                    return;
+                }
 
-            Sites = (string[])key.GetValue(sitesKey, Sites);                
-            OutputFolder = (string)key.GetValue(outputFolderKey, OutputFolder);
-            SpeedLimit = (int)key.GetValue(speedLimitKey, SpeedLimit);
-            RunAtStartup = (bool)key.GetValue(runAtStartupKey, RunAtStartup);
-            key.Close();
+                Sites = (string[])key.GetValue(sitesKey, Sites);
+                OutputFolder = (string)key.GetValue(outputFolderKey, OutputFolder);
+                SpeedLimit = (int)key.GetValue(speedLimitKey, SpeedLimit);
+                RunAtStartup = (bool)key.GetValue(runAtStartupKey, RunAtStartup);
+            }
         }
 
         public void WriteToRegistry()
         {
-            var key = Registry.CurrentUser.OpenSubKey(appRootKey, writable: true);
-            if (key == null)
+            using (var key = Registry.CurrentUser.CreateSubKey(appRootKey))
             {
-                key = Registry.CurrentUser.CreateSubKey(appRootKey);
+                key.SetValue(sitesKey, Sites);
+                key.SetValue(outputFolderKey, OutputFolder);
+                key.SetValue(speedLimitKey, SpeedLimit);
+                key.SetValue(runAtStartupKey, RunAtStartup);
             }
-            key.SetValue(sitesKey, Sites);
-            key.SetValue(outputFolderKey, OutputFolder);
-            key.SetValue(speedLimitKey, SpeedLimit);
-            key.SetValue(runAtStartupKey, RunAtStartup);
-            key.Close();
 
             if (RunAtStartup)
             {
@@ -98,28 +96,33 @@ namespace cinali
 
         private void addToStartup()
         {
-            var key = Registry.CurrentUser.OpenSubKey(autoRunRootKey, writable:true);
-            if (key == null)
+            using (var key = Registry.CurrentUser.OpenSubKey(autoRunRootKey, writable: true))
             {
-                return;
-            }
+                if (key == null)
+                {
+                    return;
+                }
 
-            string cmd = String.Format(@"""{0}"" {1}",
-                Assembly.GetExecutingAssembly().Location,
-                AutoStartParameter);
-            key.SetValue(runKey, cmd);
-            key.Close();
+                string cmd = String.Format(@"""{0}"" {1}",
+                    Assembly.GetExecutingAssembly().Location,
+                    AutoStartParameter);
+                key.SetValue(runKey, cmd);
+            }
         }
 
         private void removeFromStartup()
         {
-            var key = Registry.CurrentUser.OpenSubKey(autoRunRootKey, writable:true);
-            if (key == null)
+            using (var key = Registry.CurrentUser.OpenSubKey(autoRunRootKey, writable: true))
             {
-                return;
+                if (key == null)
+                {
+                    return;
+                }
+                if (key.GetValue(runKey) != null)
+                {
+                    key.DeleteValue(runKey);
+                }
             }
-            key.DeleteValue(runKey);
-            key.Close();
         }
 
     }

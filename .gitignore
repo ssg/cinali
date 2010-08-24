@@ -1,6 +1,6 @@
-*.suo 
-*.user 
-*.exe 
-bin 
-obj 
-.hg
+*.suo
+*.user
+*.exe
+bin/*
+obj/*
+.hg*
