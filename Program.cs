@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace cinali
 {
@@ -30,9 +31,17 @@ namespace cinali
         [STAThread]
         static void Main()
         {
+            bool acquired;
+            var mutex = new Mutex(true, "cinali", out acquired);
+            if (!acquired)
+            {
+                return;
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
+            GC.KeepAlive(mutex);
         }
     }
 }
