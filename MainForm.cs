@@ -31,9 +31,11 @@ namespace cinali
         const string wgetFileName = "wget.exe";
         const string wgetProcessName = "cinali-" + wgetFileName;
         const string userAgentsFileName = "UserAgents.txt";
+        const string debugParameter = "-debug";
 
         bool mustStopNow = false;
         bool allowClose = false;
+        bool showOutput = false;
 
         int perProcessLimit = 0;
 
@@ -79,6 +81,12 @@ namespace cinali
             limitTextBox.Text = settings.NoLimit ? String.Empty : settings.SpeedLimit.ToString();
             limitPanel.Enabled = !settings.NoLimit;
             runAtStartupCheckBox.Checked = settings.RunAtStartup;
+
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length > 1 && args[1] == debugParameter)
+            {
+                showOutput = true;
+            }
         }
 
         /// <summary>
@@ -131,7 +139,7 @@ namespace cinali
             string arguments = String.Format(wgetArguments, userAgent, perProcessLimit, name);
             var processInfo = new ProcessStartInfo(wgetPath, arguments);
             processInfo.WorkingDirectory = settings.OutputFolder;
-            processInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            processInfo.WindowStyle = showOutput ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden;
             Process process = new Process();
             process.StartInfo = processInfo;
             process.EnableRaisingEvents = true;
