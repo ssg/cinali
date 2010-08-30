@@ -29,6 +29,7 @@ namespace cinali
         // defaults
         const string wgetArguments = "--mirror --user-agent={0} --random-wait --limit-rate={1}k --page-requisites http://{2}";
         const string wgetFileName = "wget.exe";
+        const string wgetProcessName = "cinali-" + wgetFileName;
         const string userAgentsFileName = "UserAgents.txt";
 
         bool mustStopNow = false;
@@ -55,7 +56,7 @@ namespace cinali
 
             userAgents = Resource.GetStringArray(userAgentsFileName);
 
-            string path = Path.Combine(Path.GetTempPath(), wgetFileName);
+            string path = Path.Combine(Path.GetTempPath(), wgetProcessName);
             Resource.ExtractFile(wgetFileName, path);
             wgetPath = path; // ensure no-exceptions
 

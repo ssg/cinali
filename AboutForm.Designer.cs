@@ -53,7 +53,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(149, 24);
             this.label1.TabIndex = 1;
-            this.label1.Text = "cinali v0.2 beta";
+            this.label1.Text = "cinali v0.3 beta";
             // 
             // textBox1
             // 
