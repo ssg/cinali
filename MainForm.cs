@@ -74,11 +74,15 @@ namespace cinali
         /// </summary>
         private void readSettings()
         {
+            bool tempNoLimitProperty; 
+
             settings = new Settings();
+            settings.ReadFromRegistry();
+            tempNoLimitProperty = settings.NoLimit; 
             sitesTextBox.Lines = settings.Sites;
             outputFolderTextBox.Text = settings.OutputFolder;
-            noLimitCheckBox.Checked = settings.NoLimit;
             limitTextBox.Text = settings.NoLimit ? String.Empty : settings.SpeedLimit.ToString();
+            noLimitCheckBox.Checked = tempNoLimitProperty;
             limitPanel.Enabled = !settings.NoLimit;
             runAtStartupCheckBox.Checked = settings.RunAtStartup;
 

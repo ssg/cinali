@@ -34,6 +34,7 @@ namespace cinali
         const string sitesKey = "Sites";
         const string outputFolderKey = "OutputFolder";
         const string speedLimitKey = "SpeedLimit";
+        const string noLimitKey = "NoLimit";
         const string runAtStartupKey = "RunAtStartup";
         const string runKey = "cinali";
 
@@ -42,12 +43,23 @@ namespace cinali
         };
         const string defaultOutputSubFolder = "cinali";
         const int defaultSpeedLimit = 16; // 16kbps default speed
+        const bool defaultNoLimit = false;
 
         public string[] Sites { get; set; }
         public string OutputFolder { get; set; }
         public int SpeedLimit { get; set; }
         public bool RunAtStartup { get; set; }
-        public bool NoLimit { get { return SpeedLimit == 0; } }
+        public bool NoLimit
+        {
+            get
+            {
+                return SpeedLimit == 0;
+            }
+            set
+            {
+                if (value) SpeedLimit = 0;
+            }
+        }
 
         public Settings()
         {
@@ -55,6 +67,7 @@ namespace cinali
             string desktopFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             OutputFolder = Path.Combine(desktopFolder, defaultOutputSubFolder);
             SpeedLimit = defaultSpeedLimit;
+            NoLimit = defaultNoLimit;
             RunAtStartup = true;
         }
 
@@ -70,7 +83,8 @@ namespace cinali
                 Sites = (string[])key.GetValue(sitesKey, Sites);
                 OutputFolder = (string)key.GetValue(outputFolderKey, OutputFolder);
                 SpeedLimit = (int)key.GetValue(speedLimitKey, SpeedLimit);
-                RunAtStartup = (bool)key.GetValue(runAtStartupKey, RunAtStartup);
+                NoLimit = Convert.ToBoolean(key.GetValue(noLimitKey, NoLimit));
+                RunAtStartup = Convert.ToBoolean(key.GetValue(runAtStartupKey, RunAtStartup));
             }
         }
 
@@ -81,6 +95,7 @@ namespace cinali
                 key.SetValue(sitesKey, Sites);
                 key.SetValue(outputFolderKey, OutputFolder);
                 key.SetValue(speedLimitKey, SpeedLimit);
+                key.SetValue(noLimitKey, NoLimit);
                 key.SetValue(runAtStartupKey, RunAtStartup);
             }
 
