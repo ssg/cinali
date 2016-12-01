@@ -47,22 +47,13 @@ namespace cinali
 
         public string[] Sites { get; set; }
         public string OutputFolder { get; set; }
-        public int SpeedLimit { get; set; }
+        private int speedLimit;
+        public int SpeedLimit { get { return speedLimit; } set { speedLimit = value; } }
         public bool RunAtStartup { get; set; }
-        public bool NoLimit
-        {
-            get
-            {
-                return SpeedLimit == 0;
-            }
-            set
-            {
-                if (value) SpeedLimit = 0;
-            }
-        }
+        public bool NoLimit { get; set; }
 
         public Settings()
-        {
+        { 
             Sites = defaultSites;
             string desktopFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             OutputFolder = Path.Combine(desktopFolder, defaultOutputSubFolder);

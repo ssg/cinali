@@ -47,6 +47,8 @@ namespace cinali
 
         Dictionary<Process, string> processList;
 
+        bool isStartUp = true;
+
         public MainForm()
         {
             InitializeComponent();
@@ -74,15 +76,12 @@ namespace cinali
         /// </summary>
         private void readSettings()
         {
-            bool tempNoLimitProperty; 
-
             settings = new Settings();
             settings.ReadFromRegistry();
-            tempNoLimitProperty = settings.NoLimit; 
             sitesTextBox.Lines = settings.Sites;
             outputFolderTextBox.Text = settings.OutputFolder;
-            limitTextBox.Text = settings.NoLimit ? String.Empty : settings.SpeedLimit.ToString();
-            noLimitCheckBox.Checked = tempNoLimitProperty;
+            noLimitCheckBox.Checked = settings.NoLimit;
+            limitTextBox.Text = settings.SpeedLimit.ToString();
             limitPanel.Enabled = !settings.NoLimit;
             runAtStartupCheckBox.Checked = settings.RunAtStartup;
 
@@ -118,7 +117,7 @@ namespace cinali
             stopButton.Enabled = true;
             processList = new Dictionary<Process, string>();
 
-            if (settings.SpeedLimit > 0)
+            if (!settings.NoLimit)
             {
                 perProcessLimit = settings.SpeedLimit / siteNames.Length;
                 if (perProcessLimit < 1)
@@ -260,9 +259,15 @@ namespace cinali
 
         private void updateSpeedLimit()
         {
+            if (isStartUp)
+            {
+                isStartUp = false;
+                return;
+            }
+
             if (noLimitCheckBox.Checked)
             {
-                settings.SpeedLimit = 0;
+                settings.NoLimit = noLimitCheckBox.Checked;
             }
             else
             {
@@ -270,6 +275,7 @@ namespace cinali
                 if (int.TryParse(limitTextBox.Text, out value))
                 {
                     settings.SpeedLimit = value;
+                    settings.NoLimit = noLimitCheckBox.Checked;
                 }
             }
         }
