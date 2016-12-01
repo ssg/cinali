@@ -47,8 +47,7 @@ namespace cinali
 
         public string[] Sites { get; set; }
         public string OutputFolder { get; set; }
-        private int speedLimit;
-        public int SpeedLimit { get { return speedLimit; } set { speedLimit = value; } }
+        public int SpeedLimit { get; set; }
         public bool RunAtStartup { get; set; }
         public bool NoLimit { get; set; }
 
