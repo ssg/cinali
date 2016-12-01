@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace cinali
@@ -28,6 +27,7 @@ namespace cinali
     {
         // defaults
         const string wgetArguments = "--mirror --user-agent={0} --random-wait --limit-rate={1}k --page-requisites http://{2}";
+
         const string wgetFileName = "wget.exe";
         const string wgetProcessName = "cinali-" + wgetFileName;
         const string userAgentsFileName = "UserAgents.txt";
@@ -99,9 +99,9 @@ namespace cinali
             string[] siteNames = sitesTextBox.Lines;
             if (siteNames.Length == 0)
             {
-                MessageBox.Show("Hiç site belirtilmemiş", 
-                    "Olmadı", 
-                    MessageBoxButtons.OK, 
+                MessageBox.Show("Hiç site belirtilmemiş",
+                    "Olmadı",
+                    MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
                 return;
             }
@@ -159,8 +159,8 @@ namespace cinali
             if (process.ExitCode > 0)
             {
                 MessageBox.Show(String.Format("Wget çalışırken hata oluştu: 0x{0:x}",
-                    process.ExitCode.ToString()), "Hata", 
-                    MessageBoxButtons.OK, 
+                    process.ExitCode.ToString()), "Hata",
+                    MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
             lock (processList)
@@ -185,7 +185,7 @@ namespace cinali
         }
 
         /// <summary>
-        /// Stop running operation 
+        /// Stop running operation
         /// </summary>
         private void stop()
         {
@@ -249,7 +249,7 @@ namespace cinali
             {
                 allowClose = true;
                 Close();
-            }            
+            }
         }
 
         private void updateSpeedLimit()
@@ -332,6 +332,5 @@ namespace cinali
                 outputFolderTextBox.Text = folderDialog.SelectedPath;
             }
         }
-
     }
 }
