@@ -33,7 +33,6 @@ namespace cinali
         const string userAgentsFileName = "UserAgents.txt";
         const string debugParameter = "-debug";
 
-        bool mustStopNow = false;
         bool allowClose = false;
         bool showOutput = false;
 
@@ -171,10 +170,6 @@ namespace cinali
                     startDownload(processList[process]);
                 }
                 processList.Remove(process);
-                if (processList.Count == 0)
-                {
-                    mustStopNow = true;
-                }
             }
         }
 
