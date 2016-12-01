@@ -47,7 +47,11 @@ namespace cinali
 
         Dictionary<Process, string> processList;
 
+<<<<<<< HEAD
         bool isStartup = true;
+=======
+        bool isStartUp = true;
+>>>>>>> origin/master
 
         public MainForm()
         {
@@ -259,9 +263,15 @@ namespace cinali
 
         private void updateSpeedLimit()
         {
+<<<<<<< HEAD
             if (isStartup)
             {
                 isStartup = false;
+=======
+            if (isStartUp)
+            {
+                isStartUp = false;
+>>>>>>> origin/master
                 return;
             }
 
