@@ -47,6 +47,8 @@ namespace cinali
 
         Dictionary<Process, string> processList;
 
+        bool isStartup = true;
+
         public MainForm()
         {
             InitializeComponent();
@@ -75,10 +77,11 @@ namespace cinali
         private void readSettings()
         {
             settings = new Settings();
+            settings.ReadFromRegistry();
             sitesTextBox.Lines = settings.Sites;
             outputFolderTextBox.Text = settings.OutputFolder;
             noLimitCheckBox.Checked = settings.NoLimit;
-            limitTextBox.Text = settings.NoLimit ? String.Empty : settings.SpeedLimit.ToString();
+            limitTextBox.Text = settings.SpeedLimit.ToString();
             limitPanel.Enabled = !settings.NoLimit;
             runAtStartupCheckBox.Checked = settings.RunAtStartup;
 
@@ -114,7 +117,7 @@ namespace cinali
             stopButton.Enabled = true;
             processList = new Dictionary<Process, string>();
 
-            if (settings.SpeedLimit > 0)
+            if (!settings.NoLimit)
             {
                 perProcessLimit = settings.SpeedLimit / siteNames.Length;
                 if (perProcessLimit < 1)
@@ -256,9 +259,15 @@ namespace cinali
 
         private void updateSpeedLimit()
         {
+            if (isStartup)
+            {
+                isStartup = false;
+                return;
+            }
+
             if (noLimitCheckBox.Checked)
             {
-                settings.SpeedLimit = 0;
+                settings.NoLimit = noLimitCheckBox.Checked;
             }
             else
             {
@@ -266,6 +275,7 @@ namespace cinali
                 if (int.TryParse(limitTextBox.Text, out value))
                 {
                     settings.SpeedLimit = value;
+                    settings.NoLimit = noLimitCheckBox.Checked;
                 }
             }
         }
